@@ -20,8 +20,12 @@ function initClient() {
       gapi.auth2.getAuthInstance().isSignedIn.listen(updateSigninStatus);
 
       // Handle the initial sign-in state.
-      updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
-      
+      if(gapi.auth2.getAuthInstance().isSignedIn.get()){
+    	  updateSigninStatus(true)
+      } else {
+    	  updateSigninStatus(false);
+    	  handleAuthClick();
+      }      
     });
   }
 
