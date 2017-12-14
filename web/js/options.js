@@ -21,8 +21,7 @@ function initClient() {
 
       // Handle the initial sign-in state.
       updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
-      authorizeButton.onclick = handleAuthClick;
-      signoutButton.onclick = handleSignoutClick;
+      
     });
   }
 
@@ -60,15 +59,22 @@ function handleSignoutClick(event) {
 }
 
 function loadCalendars(){
-	
-	
-	
-	
 	console.log("calendar loaded");
 	var request = gapi.client.calendar.calendarList.list();
 
     request.execute(function(resp){
-            var calendars = resp.items;
-            console.log(calendars);
+            var calendars = resp.items || [];
+            $('#calendarList').empty();
+            calendars = calendars.sort(SortByName);
+            $.each(calendars, function(idx, calendar){
+            	var option = $('<option>').val(calendar.id).text(calendar.summary);
+            	$('#calendarList').append(option)
+            });
     });
+}
+//This will sort your array
+function SortByName(a, b){
+  var aName = a.summary.toLowerCase();
+  var bName = b.summary.toLowerCase(); 
+  return ((aName < bName) ? -1 : ((aName > bName) ? 1 : 0));
 }
